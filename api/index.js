@@ -1,41 +1,47 @@
 import express from 'express';
-import cors from 'cors';
 
 const app = express();
 
-// CORS - MUST BE FIRST
+// Explicit CORS handler that runs for every request
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  const origin = req.headers.origin || '*';
+  res.header('Access-Control-Allow-Origin', origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Expose-Headers', 'Content-Length');
+  res.header('Access-Control-Allow-Headers', 'Accept, Accept-Language, Content-Language, Content-Type, Authorization');
   
+  // Handle OPTIONS preflight
   if (req.method === 'OPTIONS') {
-    res.statusCode = 200;
-    res.end();
-    return;
+    return res.sendStatus(204);
   }
+  
   next();
 });
 
 app.use(express.json());
-app.use(cors());
 
 // ==================== HEALTH CHECK ====================
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// ==================== PLACEHOLDER ====================
+// ==================== AUTH ENDPOINTS ====================
 app.post('/api/auth/signup', (req, res) => {
-  res.json({ message: 'Signup endpoint - Phase 1' });
+  res.json({ message: 'Signup - Phase 1' });
 });
 
 app.post('/api/auth/login', (req, res) => {
-  res.json({ message: 'Login endpoint - Phase 1' });
+  res.json({ message: 'Login - Phase 1' });
 });
 
+// ==================== PLACEHOLDER ENDPOINTS ====================
 app.get('/api/workspaces/:id/opponents', (req, res) => {
   res.json([]);
+});
+
+app.post('/api/workspaces/:id/opponents', (req, res) => {
+  res.json({ id: '1', name: 'Test Opponent' });
 });
 
 // ==================== ERROR HANDLER ====================
