@@ -1,11 +1,5 @@
-{
+
   "buildCommand": "npm ci",
-  "env": [
-    "SUPABASE_URL",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "JWT_SECRET",
-    "ANTHROPIC_API_KEY"
-  ],
   "functions": {
     "api/*.js": {
       "memory": 1024,
